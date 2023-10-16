@@ -1,7 +1,8 @@
 import express,{Application} from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
 dotenv.config();
+import cors from 'cors';
+
 
 import useRoutes from '../routes/message';
 
