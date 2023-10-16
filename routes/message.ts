@@ -3,8 +3,8 @@ import {reciveMessage, verifyToken } from '../controllers/message'
 
 const router=Router();
 
-router.get('/',reciveMessage);
-router.post('/',verifyToken); 
+router.get('/',verifyToken);
+router.post('/',reciveMessage); 
 
 
 export default router;
