@@ -20,15 +20,16 @@ class Server
 
         this.app=express();
         this.port=process.env.PORT || "4083";
+        this.middleware();
+        this.app.use(express.static('public')); 
         this.routes();
-        this. middleware();
-        this.app.use(express.static('public'));
     }
 
 
     middleware(){
         
         this.app.use(cors());
+        this. app.use(express.urlencoded({ extended: false }));
         this.app.use(express.json());
 
     }
