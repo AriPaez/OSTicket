@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import dotenv from 'dotenv'; 
-import { logic } from "../models/logic";
+import { logic } from "../shared/logic";
 dotenv.config();
 
 
@@ -52,7 +52,7 @@ export const reciveMessage=(req:Request,res:Response)=>{
         let messages=messageObject[0];    
 
         let typeMessage:string=messages["type"];
-        let messagesIn:string=(messages["text"])["body"];
+        
 
 
         if(value.metadata.phone_number_id!= ALLOW_ID_OSTICKET)
@@ -65,9 +65,26 @@ export const reciveMessage=(req:Request,res:Response)=>{
                      
                         let number:string=messages["from"].replace('9','');
                         
-                        getTextUser(messagesIn,typeMessage,number,nameUser);
-                    
+                        if(typeMessage=="text")
+                        {
+                            messageText((messages["text"])["body"],number,nameUser);
+                        }
+                        else if(typeMessage=="interactive")
+                        {
+                            let interactiveObject=messages["interactive"];
+                            let typeInteractive:string=interactiveObject["type"];
+                            if(typeInteractive=="button_reply")
+                            {
+                                
+                                messageInteractive((interactiveObject["button_reply"])["id"],number,nameUser);
+                            }
+                            else
+                            {
+                                messageList_reply((interactiveObject["list_reply"])["title"],number,nameUser);
+                            }
 
+
+                        }
             }
             else
             {
@@ -93,18 +110,47 @@ export const reciveMessage=(req:Request,res:Response)=>{
 }
 
 
-const getTextUser=(message:string,typeMessage:string,number:string,nameUser:string)=>{
-
-    if(typeMessage=="text")
-    {
-        
+const messageText=(messages:string,number:string,nameUser:string)=>
+{
+     
         console.log("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-        console.log("ALLOW OSTICKET PACKETS");
-        console.log("\nTHE TEXT OF WABA_OSTICKET IS "+message);
+        console.log("ALLOW OSTICKET PACKETS=>");
+        console.log("\nTHE TEXT OF WABA_OSTICKET IS: ");
         console.log("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
-         logic(message,number,nameUser);
-    } 
-
+        logic(messages,number,nameUser);
 
 }
+ 
+const messageInteractive=(messages:string,number:string,nameUser:string)=>
+{
+     
+   
+    /*
+    when the id returns with a comma, it has the ticket id and user number to notify closure
+    */
+    if(messages.includes(","))
+    {
+        let arr=messages .split(",");
+      
+        
+           // notification.ticketClosed(arr[0],arr[1]);
+
+            return null;
+    }
+
+    logic(messages,number,nameUser);
+    
+}
+
+const messageList_reply=(messages:string,number:string,nameUser:string)=>
+{
+  
+
+    logic(messages,number,nameUser);
+    
+}
+
+
+
+ 
