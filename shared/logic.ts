@@ -1,5 +1,6 @@
+import user from "../models/user";
 
-export const logic=(text:string,number:string,nameUser:string)=>{
+export async function logic(text:string,number:string,nameUser:string){
 
         
 
@@ -7,5 +8,16 @@ export const logic=(text:string,number:string,nameUser:string)=>{
 
 
         console.log("this is the message:"+text);
-    
+     
+
+        if(await user.findByPk(number))
+        {     
+
+
+
+        }
+
+
+
+
 }
