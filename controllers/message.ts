@@ -43,13 +43,43 @@ export const reciveMessage=(req:Request,res:Response)=>{
 
     try 
     {
-         
-     const body=req.body;
-        res.json({
-            body
-        });
-         
 
+       
+        let entry=(req.body["entry"])[0];
+        let changes=(entry["changes"])[0];
+        let value=changes["value"];
+        let messageObject=value["messages"];
+        let messages=messageObject[0];    
+
+        let typeMessage:string=messages["type"];
+        let messagesIn:string=(messages["text"])["body"];
+
+
+        if(value.metadata.phone_number_id!= ALLOW_ID_OSTICKET)
+        {
+            if(typeof messageObject != "undefined")
+            {
+                        
+
+                        let nameUser:string=(value["contacts"][0].profile.name);
+                     
+                        let number:string=messages["from"].replace('9','');
+                        
+                        getTextUser(messagesIn,typeMessage,number,nameUser);
+                    
+
+            }
+            else
+            {
+                    console.log("\n#########################################################################\n");
+                    console.log("DROP WABA PACKETS");
+                    console.log("\nTHE TEXT OF WABA IS");
+                    console.log("\n#########################################################################\n");
+
+            }
+        }
+        
+      
     }
     catch (error) 
     {
@@ -59,5 +89,22 @@ export const reciveMessage=(req:Request,res:Response)=>{
         });
 
     }
+
+}
+
+
+const getTextUser=(message:string,typeMessage:string,number:string,nameUser:string)=>{
+
+    if(typeMessage=="text")
+    {
+        
+        console.log("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        console.log("ALLOW OSTICKET PACKETS");
+        console.log("\nTHE TEXT OF WABA_OSTICKET IS "+message);
+        console.log("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+         logic(message,number,nameUser);
+    } 
+
 
 }
